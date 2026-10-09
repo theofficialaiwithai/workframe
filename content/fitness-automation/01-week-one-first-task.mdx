@@ -1,0 +1,26 @@
+---
+title: "Your weekly client attendance check"
+order: 1
+colabUrl: "https://colab.research.google.com/"
+datasetPath: "/datasets/fitness-automation/sample.csv"
+minutes: 25
+---
+
+# Your weekly client attendance check
+
+Each week you compare what you planned with what clients actually did. Today you will let a short script do that comparison and flag anyone who fell behind.
+
+You will start from a sample sheet with a client, a week, the sessions planned and the sessions done. The script works out each client's attendance rate and lists everyone under 70 percent.
+
+```python
+import pandas as pd
+
+log = pd.read_csv("sample.csv")
+log["attendance"] = log["sessions_done"] / log["sessions_planned"]
+
+behind = log[log["attendance"] < 0.7].sort_values("attendance")
+behind.to_csv("clients_to_check_in_with.csv", index=False)
+print(behind)
+```
+
+Open the notebook in Colab, upload the sample file, and run it. Then swap in your own tracking sheet.

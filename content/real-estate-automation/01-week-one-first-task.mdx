@@ -1,0 +1,27 @@
+---
+title: "Your Monday lead follow-up list"
+order: 1
+colabUrl: "https://colab.research.google.com/"
+datasetPath: "/datasets/real-estate-automation/sample.csv"
+minutes: 25
+---
+
+# Your Monday lead follow-up list
+
+Every Monday you scroll through your pipeline and decide who to call. Today you will let a short script do that sort for you, so the list is waiting when you sit down.
+
+You will start from a sample export of leads with a name, a phone number, a stage and the date you last spoke. The script counts how many days each lead has been quiet and puts the longest-quiet leads at the top.
+
+```python
+import pandas as pd
+
+leads = pd.read_csv("sample.csv", parse_dates=["last_contact"])
+today = pd.Timestamp.today().normalize()
+leads["days_quiet"] = (today - leads["last_contact"]).dt.days
+
+follow_up = leads[leads["days_quiet"] >= 7].sort_values("days_quiet", ascending=False)
+follow_up[["name", "phone", "days_quiet"]].to_csv("monday_follow_ups.csv", index=False)
+print(follow_up)
+```
+
+Open the notebook in Colab, upload the sample file, and run it. Then swap in your own export.

@@ -1,0 +1,4 @@
+contract_id,client,renewal_date,value_usd
+C-1001,Sample Client A,2026-11-15,12000
+C-1002,Sample Client B,2027-02-01,8500
+C-1003,Sample Client C,2026-10-30,22000

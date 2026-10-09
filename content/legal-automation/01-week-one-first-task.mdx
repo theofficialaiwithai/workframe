@@ -1,0 +1,28 @@
+---
+title: "Your contract renewal watch list"
+order: 1
+colabUrl: "https://colab.research.google.com/"
+datasetPath: "/datasets/legal-automation/sample.csv"
+minutes: 25
+---
+
+# Your contract renewal watch list
+
+Renewal dates hide in folders and spreadsheets until someone notices they passed. Today you will build a list that shows every contract renewing in the next 60 days, soonest first.
+
+You will start from a sample sheet with a contract ID, a client, a renewal date and a value. The script keeps the contracts that renew soon and saves them as a short list you can review each Monday.
+
+```python
+import pandas as pd
+
+contracts = pd.read_csv("sample.csv", parse_dates=["renewal_date"])
+today = pd.Timestamp.today().normalize()
+contracts["days_left"] = (contracts["renewal_date"] - today).dt.days
+
+watch = contracts[(contracts["days_left"] >= 0) & (contracts["days_left"] <= 60)]
+watch = watch.sort_values("days_left")
+watch.to_csv("renewal_watch_list.csv", index=False)
+print(watch)
+```
+
+Open the notebook in Colab, upload the sample file, and run it. Then swap in your own sheet.
