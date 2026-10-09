@@ -2,22 +2,42 @@
 @tailwind components;
 @tailwind utilities;
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
-
-@media (prefers-color-scheme: dark) {
+/*
+  Workframe design tokens (PRD Section 7).
+  Stored as space-separated RGB channels so Tailwind opacity modifiers work
+  (e.g. bg-primary/50). The hex value is in the comment next to each token.
+*/
+@layer base {
   :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+    --bg: 248 245 240; /* #F8F5F0 */
+    --surface: 255 255 255; /* #FFFFFF */
+    --surface-alt: 240 237 232; /* #F0EDE8 */
+    --primary: 255 107 53; /* #FF6B35 */
+    --secondary: 255 91 95; /* #FF5B5F */
+    --ink: 20 20 18; /* #141412 */
+    --muted: 107 107 102; /* #6B6B66 */
+    --border: 228 223 214; /* #E4DFD6 */
+    --danger: 179 38 30; /* #B3261E */
+
+    --radius: 0.5rem;
   }
 }
 
-body {
-  color: var(--foreground);
-  background: var(--background);
-  font-family: Arial, Helvetica, sans-serif;
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-bg font-sans text-ink antialiased;
+  }
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    @apply font-heading;
+  }
 }
 
 @layer utilities {
