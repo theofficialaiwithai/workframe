@@ -2,6 +2,8 @@ import type { Metadata } from "next";
 import { GeistSans } from "geist/font/sans";
 import { JetBrains_Mono } from "next/font/google";
 import localFont from "next/font/local";
+import { ClerkProvider } from "@clerk/nextjs";
+import { SiteHeader } from "@/components/site-header";
 import "./globals.css";
 
 const jetbrainsMono = JetBrains_Mono({
@@ -33,12 +35,17 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
-      <body
-        className={`${GeistSans.variable} ${jetbrainsMono.variable} ${cabinetGrotesk.variable}`}
-      >
-        {children}
-      </body>
-    </html>
+    <ClerkProvider>
+      <html lang="en">
+        <body
+          className={`${GeistSans.variable} ${jetbrainsMono.variable} ${cabinetGrotesk.variable} flex min-h-screen flex-col`}
+        >
+          <SiteHeader />
+          <main className="mx-auto w-full max-w-[1080px] flex-1 px-u2">
+            {children}
+          </main>
+        </body>
+      </html>
+    </ClerkProvider>
   );
 }

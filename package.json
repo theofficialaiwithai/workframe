@@ -11,6 +11,7 @@
     "db:check": "tsx --env-file=.env.local scripts/db-check.ts"
   },
   "dependencies": {
+    "@clerk/nextjs": "^6.39.7",
     "@neondatabase/serverless": "^1.2.0",
     "@radix-ui/react-dialog": "^1.2.0",
     "@radix-ui/react-label": "^2.1.16",
@@ -23,6 +24,7 @@
     "next": "14.2.35",
     "react": "^18",
     "react-dom": "^18",
+    "server-only": "^0.0.1",
     "tailwind-merge": "^3.7.0",
     "tailwindcss-animate": "^1.0.7",
     "ws": "^8.22.0"
