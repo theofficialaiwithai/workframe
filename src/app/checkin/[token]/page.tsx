@@ -3,6 +3,9 @@ import { CheckinForm } from "@/components/checkin-form";
 import { sql } from "@/lib/db";
 
 export const dynamic = "force-dynamic";
+// Submitting this form runs the Claude extraction before the thank-you, so
+// give the serverless function room (the Claude client times out at 20s).
+export const maxDuration = 30;
 
 // The token is the only credential: keep these URLs out of search results and
 // out of the Referer header.
