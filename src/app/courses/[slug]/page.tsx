@@ -1,7 +1,7 @@
 import { notFound } from "next/navigation";
 import type { Metadata } from "next";
 import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
+import { EnrollButton } from "@/components/enroll-button";
 import { Card, CardContent } from "@/components/ui/card";
 import { formatPrice, getCourse } from "@/lib/courses";
 
@@ -66,9 +66,11 @@ export default async function CoursePage({ params }: Props) {
             <CardContent className="pt-u3">
               <p className="text-4xl font-bold">{formatPrice(course.price_cents)}</p>
               <p className="mt-u1 text-sm text-muted">One-time payment.</p>
-              <Button className="mt-u3 w-full" disabled={!isLive}>
-                Enroll — {formatPrice(course.price_cents)}
-              </Button>
+              <EnrollButton
+                courseSlug={course.slug}
+                label={`Enroll — ${formatPrice(course.price_cents)}`}
+                disabled={!isLive}
+              />
               {!isLive && (
                 <p className="mt-u2 text-sm text-muted">
                   This course is in preparation. Join the waitlist soon.
