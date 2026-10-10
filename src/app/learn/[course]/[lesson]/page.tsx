@@ -2,17 +2,23 @@ import Link from "next/link";
 import { notFound, redirect } from "next/navigation";
 import { MDXRemote } from "next-mdx-remote/rsc";
 import { CodeBlock } from "@/components/code-block";
+import { StagedLesson } from "@/components/staged-lesson";
 import { LessonNav } from "@/components/lesson-nav";
 import { Button } from "@/components/ui/button";
 import { getLesson, getLessons } from "@/lib/lessons";
 import { completedLessonSlugs, getLessonAccess } from "@/lib/learn";
+import { hasAllStagesInOrder, splitSections } from "@/lib/lesson-stages";
+import { getPrediction } from "@/lib/predictions";
 import { markLessonComplete } from "../../actions";
 
 export const dynamic = "force-dynamic";
 
-type Props = { params: { course: string; lesson: string } };
+type Props = {
+  params: { course: string; lesson: string };
+  searchParams: { run?: string };
+};
 
-export default async function LessonPage({ params }: Props) {
+export default async function LessonPage({ params, searchParams }: Props) {
   // Gate: signed in AND actively enrolled, otherwise back to the sales page.
   const access = await getLessonAccess(params.course);
   if (!access) redirect(`/courses/${params.course}`);
@@ -26,6 +32,12 @@ export default async function LessonPage({ params }: Props) {
   const prev = index > 0 ? lessons[index - 1] : null;
   const next = index < lessons.length - 1 ? lessons[index + 1] : null;
   const isDone = completed.has(lesson.slug);
+
+  // v2 lessons (with a `stage`) render as stage cards. Anything else is a v1 lesson.
+  const parts = lesson.stage ? splitSections(lesson.content) : null;
+  const staged = parts !== null && hasAllStagesInOrder(parts.sections);
+  const prediction = staged ? await getPrediction(access.student.id, access.course.id, lesson.slug) : null;
+  const runOpen = prediction !== null || searchParams.run === "1";
 
   const nav = (
     <LessonNav
@@ -52,6 +64,16 @@ export default async function LessonPage({ params }: Props) {
         </aside>
 
         <article>
+          {staged && parts ? (
+            <StagedLesson
+              courseSlug={params.course}
+              lesson={lesson}
+              sections={parts.sections}
+              prediction={prediction}
+              runOpen={runOpen}
+            />
+          ) : (
+            <>
           <div className="flex flex-wrap gap-u1">
             {lesson.colabUrl && (
               <Button asChild>
@@ -72,6 +94,8 @@ export default async function LessonPage({ params }: Props) {
           <div className="prose prose-lg mt-u3 max-w-none text-ink prose-headings:font-heading prose-headings:text-ink prose-a:text-ink prose-strong:text-ink prose-code:font-mono prose-code:before:content-none prose-code:after:content-none">
             <MDXRemote source={lesson.content} components={{ pre: CodeBlock }} />
           </div>
+            </>
+          )}
 
           <div className="mt-u5 border-t border-border pt-u3">
             <form action={markLessonComplete.bind(null, params.course, lesson.slug)}>

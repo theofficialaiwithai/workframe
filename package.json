@@ -18,7 +18,10 @@
     "test:digest": "tsx --env-file=.env.local scripts/test-digest-guard.ts",
     "test:sampling": "tsx --env-file=.env.local scripts/test-sampling.ts",
     "test:markdown": "tsx scripts/test-markdown.ts",
-    "test:checkin-cron": "tsx --env-file=.env.local scripts/test-checkin-cron.ts"
+    "test:checkin-cron": "tsx --env-file=.env.local scripts/test-checkin-cron.ts",
+    "lessons:validate": "tsx scripts/validate-lessons.ts",
+    "test:lessons": "tsx scripts/test-lessons.ts",
+    "test:predictions": "tsx --env-file=.env.local scripts/test-predictions.ts"
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.133.0",

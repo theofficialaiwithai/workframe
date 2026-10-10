@@ -1,0 +1,9 @@
+lead_id,name,phone,stage,last_contact
+L-101,Sample Lead A,555-0101,Showing booked,2026-09-20
+L-102,Sample Lead B,555-0102,New inquiry,2026-10-08
+L-103,Sample Lead C,555-0103,Offer pending,2026-10-01
+L-104,Sample Lead D,555-0104,New inquiry,2026-10-10
+L-105,Sample Lead E,555-0105,Showing booked,2026-09-28
+L-106,Sample Lead F,555-0106,New inquiry,2026-10-11
+L-107,Sample Lead G,555-0107,Offer pending,2026-10-07
+L-108,Sample Lead H,555-0108,New inquiry,2026-10-09

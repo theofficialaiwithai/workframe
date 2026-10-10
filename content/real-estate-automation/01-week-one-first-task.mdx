@@ -1,27 +1,88 @@
 ---
-title: "Your Monday lead follow-up list"
+title: "Build your weekly follow-up list"
 order: 1
+minutes: 20
+stage: worked
 colabUrl: "https://colab.research.google.com/"
-datasetPath: "/datasets/real-estate-automation/sample.csv"
-minutes: 25
+datasetPath: "/datasets/real-estate-automation/leads.csv"
+newConcepts: ["read a CSV", "filter rows"]
+predict:
+  question: "What will the last line print for the sample file?"
+expected:
+  description: "A table of 3 leads, each at least 7 days since last contact, longest quiet first."
+  sampleOutputPath: "/datasets/real-estate-automation/expected-01.txt"
+recall:
+  question: "Without looking: which line decides who is on the follow-up list?"
+  answer: "The line that filters rows where days_since_contact is at least 7."
+errors:
+  - message: "FileNotFoundError: leads.csv"
+    cause: "The notebook can't see the file."
+    fix: "Upload leads.csv in Colab's file panel, then rerun the first cell."
+  - message: "KeyError: 'last_contact'"
+    cause: "The column name in your file is spelled differently."
+    fix: "Open the file, copy the exact header of the date column, and use that name in the read_csv line."
 ---
 
-# Your Monday lead follow-up list
+## Goal
 
-Every Monday you scroll through your pipeline and decide who to call. Today you will let a short script do that sort for you, so the list is waiting when you sit down.
+By Friday, your Monday follow-up list builds itself: every lead you haven't spoken to in a week, longest quiet first.
 
-You will start from a sample export of leads with a name, a phone number, a stage and the date you last spoke. The script counts how many days each lead has been quiet and puts the longest-quiet leads at the top.
+{/* PRACTITIONER_TO_CONFIRM: the real follow-up rule (7 days? by stage?) and how the insider words this goal. */}
+
+## Predict
+
+Look at the code in the next section, but don't run it yet. Then answer the question above: what do you think the last line prints for the sample file? A rough guess is fine. Save your guess first, so you can compare it with what happens.
+
+## Run
+
+Open the notebook in Colab and upload `leads.csv` from the file panel. Run each cell from the top. Compare what prints with your prediction. This lesson is a worked example: every line is already written, so your job is to read it and see what it does.
 
 ```python
 import pandas as pd
 
-leads = pd.read_csv("sample.csv", parse_dates=["last_contact"])
-today = pd.Timestamp.today().normalize()
-leads["days_quiet"] = (today - leads["last_contact"]).dt.days
+# Fixed date for the sample file. On your own data, use pd.Timestamp.today().
+TODAY = pd.Timestamp("2026-10-12")
 
-follow_up = leads[leads["days_quiet"] >= 7].sort_values("days_quiet", ascending=False)
-follow_up[["name", "phone", "days_quiet"]].to_csv("monday_follow_ups.csv", index=False)
-print(follow_up)
+# 1. Read the file. parse_dates turns the text into real dates.
+leads = pd.read_csv("leads.csv", parse_dates=["last_contact"])
+
+# 2. How long since you last spoke to each lead?
+leads["days_since_contact"] = (TODAY - leads["last_contact"]).dt.days
+
+# 3. Keep only the leads quiet for 7 days or more, longest first.
+follow_up = leads[leads["days_since_contact"] >= 7]
+follow_up = follow_up.sort_values("days_since_contact", ascending=False)
+
+# 4. Show the list.
+print(follow_up[["lead_id", "name", "days_since_contact"]])
 ```
 
-Open the notebook in Colab, upload the sample file, and run it. Then swap in your own export.
+{/* PRACTITIONER_TO_CONFIRM: replace the sample columns and the 7-day rule with the insider's real export and rule. */}
+
+## Investigate
+
+Change the `7` in step 3 to `14` and run it again. Which leads drop off the list? What does that tell you about how the rule decides who to call?
+
+## Modify
+
+Run the same notebook on a second file with the same columns: [leads-second.csv](/datasets/real-estate-automation/leads-second.csv). Upload it, change `leads.csv` to `leads-second.csv` in step 1, and run it. Then try your own lead export if you have one, with its column names.
+
+## Make
+
+There is no Make step in this lesson. The next lesson leaves part of the code blank for you to fill in.
+
+## Check
+
+Before you trust the list, check it:
+
+- Does your table have the same 3 leads as the [sample output](/datasets/real-estate-automation/expected-01.txt)?
+- Is it sorted from the most days quiet to the fewest?
+- Is anyone on the list who you know you spoke to this week? If so, the date column is wrong.
+
+When your starter kit is ready, run its test cases after any change you or your AI assistant makes.
+
+{/* PRACTITIONER_TO_CONFIRM: wording of the checks, and the golden cases this lesson points to. */}
+
+## When it breaks
+
+Most first-run problems are one of these. Open the one you see.

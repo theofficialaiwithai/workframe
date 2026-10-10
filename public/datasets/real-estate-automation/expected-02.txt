@@ -1,0 +1,6 @@
+  lead_id           name  status
+0   L-301  Sample Lead J  active
+3   L-303  Sample Lead L  active
+5   L-304  Sample Lead M  active
+7   L-305  Sample Lead N  active
+4 leads after cleaning

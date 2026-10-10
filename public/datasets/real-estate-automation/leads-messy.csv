@@ -1,0 +1,9 @@
+Lead ID,Name ,Phone,Status,Last Contact
+L-301,Sample Lead J,555-0301,active,2026-09-22
+L-302,Sample Lead K,555-0302,do_not_contact,2026-09-01
+,,,,
+L-303,Sample Lead L,555-0303,active,2026-10-09
+L-301,Sample Lead J,555-0301,active,2026-09-22
+L-304,Sample Lead M,555-0304,active,2026-10-01
+,,,,
+L-305,Sample Lead N,555-0305,active,2026-10-11

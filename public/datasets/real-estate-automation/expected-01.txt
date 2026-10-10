@@ -1,0 +1,4 @@
+  lead_id           name  days_since_contact
+0   L-101  Sample Lead A                  22
+4   L-105  Sample Lead E                  14
+2   L-103  Sample Lead C                  11

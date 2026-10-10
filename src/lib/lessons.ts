@@ -13,15 +13,49 @@ export interface LessonMeta {
   minutes: number;
 }
 
+export type LessonStage = "worked" | "faded" | "scaffolded";
+
 export interface Lesson extends LessonMeta {
   /** MDX source without the frontmatter. */
   content: string;
+  // v2 template fields (v2 PRD Section 2.2). Absent on lessons still in the v1 format.
+  stage?: LessonStage;
+  newConcepts?: string[];
+  predict?: { question: string };
+  expected?: { description: string; sampleOutputPath: string };
+  recall?: { question: string; answer: string };
+  errors?: { message: string; cause: string; fix: string }[];
 }
 
 const CONTENT_DIR = join(process.cwd(), "content");
 
 // Slugs come from URLs, so only plain slugs are allowed (no path tricks).
 const SAFE_SLUG = /^[a-z0-9][a-z0-9-]*$/;
+
+/** Reads the v2 frontmatter if the lesson uses it. `npm run lessons:validate` guarantees the shape. */
+function v2Fields(data: Record<string, unknown>): Partial<Lesson> {
+  if (data.stage !== "worked" && data.stage !== "faded" && data.stage !== "scaffolded") return {};
+  const obj = (v: unknown) => (typeof v === "object" && v !== null ? (v as Record<string, unknown>) : {});
+  const predict = obj(data.predict);
+  const expected = obj(data.expected);
+  const recall = obj(data.recall);
+  return {
+    stage: data.stage,
+    newConcepts: Array.isArray(data.newConcepts) ? data.newConcepts.map(String) : [],
+    predict: { question: String(predict.question ?? "") },
+    expected: {
+      description: String(expected.description ?? ""),
+      sampleOutputPath: String(expected.sampleOutputPath ?? ""),
+    },
+    recall: { question: String(recall.question ?? ""), answer: String(recall.answer ?? "") },
+    errors: Array.isArray(data.errors)
+      ? data.errors.map((e) => {
+          const x = obj(e);
+          return { message: String(x.message ?? ""), cause: String(x.cause ?? ""), fix: String(x.fix ?? "") };
+        })
+      : [],
+  };
+}
 
 function parse(courseSlug: string, file: string): Lesson {
   const raw = readFileSync(join(CONTENT_DIR, courseSlug, file), "utf8");
@@ -34,6 +68,7 @@ function parse(courseSlug: string, file: string): Lesson {
     datasetPath: String(data.datasetPath ?? ""),
     minutes: Number(data.minutes ?? 0),
     content,
+    ...v2Fields(data),
   };
 }
 
@@ -77,6 +112,7 @@ export function firstParagraph(mdx: string): string {
     }
     if (inFence) continue;
     if (line.startsWith("#")) continue;
+    if (line.trim().startsWith("{/*")) continue;
     if (line.trim() === "") {
       if (paragraph.length > 0) break;
       continue;

@@ -1,13 +1,89 @@
 ---
-title: "Clean your MLS export"
+title: "Clean your lead export first"
 order: 2
+minutes: 25
+stage: faded
 colabUrl: "https://colab.research.google.com/"
-datasetPath: "/datasets/real-estate-automation/sample.csv"
-minutes: 20
+datasetPath: "/datasets/real-estate-automation/leads-messy.csv"
+newConcepts: ["tidy column names", "drop duplicates"]
+predict:
+  question: "How many leads will be left after cleaning?"
+expected:
+  description: "A table of 4 active leads with no blank rows or repeats, and the line '4 leads after cleaning'."
+  sampleOutputPath: "/datasets/real-estate-automation/expected-02.txt"
+recall:
+  question: "Without looking: why must the do-not-contact rule run before you build any list?"
+  answer: "A lead marked do-not-contact must never appear in any outreach list, so they are removed first."
+errors:
+  - message: "KeyError: 'lead_id'"
+    cause: "The column names were not tidied before you used them."
+    fix: "Run the column-name step first. Names like 'Lead ID' become lead_id only after it runs."
+  - message: "TypeError: ... got an unexpected keyword argument"
+    cause: "A blank was left unfilled or a word was mistyped."
+    fix: "Check the two blanks in the Make step. Each needs a column name or a status in quotes."
 ---
 
-# Clean your MLS export
+## Goal
 
-Placeholder lesson. This is where you will turn a messy MLS export into one tidy sheet: consistent column names, one row per listing, and no blank lines.
+Your lead list is only as good as the export behind it. Clean it once, the same way every week, and never contact someone who asked you not to.
 
-The insider will replace this page with the real lesson.
+{/* PRACTITIONER_TO_CONFIRM: the do-not-contact rule and any other exclusions (past clients, agents) the insider applies. */}
+
+## Predict
+
+Open the messy file and look at it before you run anything. It has blank rows, a lead that appears twice, and one lead marked do-not-contact. How many leads do you think will be left after cleaning? Save your guess first.
+
+## Run
+
+Upload `leads-messy.csv` to Colab. This lesson is faded: the first steps are written for you and the last two have blanks. Run the cells up to the blanks and read what each step does.
+
+```python
+import pandas as pd
+
+raw = pd.read_csv("leads-messy.csv")
+
+# 1. Tidy the column names: lower case, no spaces. ('Lead ID' becomes lead_id.)
+raw.columns = raw.columns.str.strip().str.lower().str.replace(" ", "_")
+
+# 2. Drop rows that are completely empty.
+clean = raw.dropna(how="all")
+
+# 3. Keep one row per lead.            <-- your turn (blank 1)
+clean = clean.drop_duplicates(subset=["____"])
+
+# 4. Hard rule: never contact a do-not-contact lead.   <-- your turn (blank 2)
+clean = clean[clean["status"] != "____"]
+
+print(clean[["lead_id", "name", "status"]])
+print(len(clean), "leads after cleaning")
+```
+
+{/* PRACTITIONER_TO_CONFIRM: the real export's column names and what the status values are called. */}
+
+## Investigate
+
+Move step 4 above step 2 and read the error or the output. Does the order of cleaning steps matter here? Why do you think this lesson tidies the column names first?
+
+## Modify
+
+Try the same cleaning on a different export. Use your own lead list if you have one, and change the file name in the first line. Check that your column names match, and that the word for "do not contact" in your file is the one you put in blank 2.
+
+## Make
+
+Fill the two blanks. Blank 1 is the column that identifies a lead, so that a lead who appears twice is kept once. Blank 2 is the status word that means do not contact. Both go in quotes. Run the notebook again.
+
+## Check
+
+Compare your output with the [sample output](/datasets/real-estate-automation/expected-02.txt):
+
+- Are there exactly 4 leads left, and does the last line say so?
+- Is the do-not-contact lead gone, even though it was contacted a month ago?
+- Does each lead appear only once?
+
+When your starter kit is ready, run its test cases after any change you or your AI assistant makes.
+
+{/* PRACTITIONER_TO_CONFIRM: wording of the checks, and the golden cases this lesson points to. */}
+
+## When it breaks
+
+Open the one you see.
