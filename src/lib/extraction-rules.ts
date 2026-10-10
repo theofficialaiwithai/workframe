@@ -5,6 +5,9 @@ import { z } from "zod";
 
 export const EXTRACT_PROMPT_VERSION = "extract-v1";
 
+/** Anywhere hours saved is shown, it carries this label (PRD 5.4, amplifier framing). */
+export const HOURS_LABEL = "student-reported, AI-estimated";
+
 /** Statuses whose hours count toward any total (PRD Section 9). */
 export const COUNTED_STATUSES = ["auto_accepted", "approved", "corrected"] as const;
 

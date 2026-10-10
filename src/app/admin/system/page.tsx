@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { KillSwitch } from "@/components/admin/kill-switch";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { requireAdmin } from "@/lib/admin";
@@ -29,6 +30,23 @@ export default async function SystemPage() {
               : `Never changed by an admin. Last updated ${formatTime(kill.updatedAt)} (Central).`
             : "The switch could not be read, so jobs are treated as paused."}
         </p>
+      </section>
+
+      <section className="mt-u4 rounded-lg border border-border bg-surface p-u3">
+        <h2 className="text-xl font-bold">Governance documents</h2>
+        <p className="mt-u1 text-muted">What the AI is for, and who decides what.</p>
+        <ul className="mt-u1">
+          <li>
+            <Link href="/admin/docs/strategic-intent" className="inline-flex min-h-tap items-center font-medium underline">
+              Strategic intent
+            </Link>
+          </li>
+          <li>
+            <Link href="/admin/docs/decision-rights" className="inline-flex min-h-tap items-center font-medium underline">
+              Decision rights
+            </Link>
+          </li>
+        </ul>
       </section>
 
       <section className="mt-u4">

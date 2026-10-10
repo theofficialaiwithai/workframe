@@ -10,6 +10,7 @@ import {
   rejectExtraction,
 } from "@/app/admin/actions";
 import { formatTime, type ReviewRow } from "@/lib/admin-data";
+import { HOURS_LABEL } from "@/lib/extraction-rules";
 
 function NoteField({ id, required }: { id: string; required: boolean }) {
   return (
@@ -59,6 +60,7 @@ function CorrectForm({ row, mode }: { row: ReviewRow; mode: "review" | "sample" 
 /** Review queue and sampling queue share one layout; only the actions differ. */
 export function ReviewTable({ rows, mode }: { rows: ReviewRow[]; mode: "review" | "sample" }) {
   return (
+    <>
     <Table className="min-w-[1180px] lg:min-w-0 lg:table-fixed">
       <TableHeader>
         <TableRow>
@@ -133,5 +135,7 @@ export function ReviewTable({ rows, mode }: { rows: ReviewRow[]; mode: "review" 
         ))}
       </TableBody>
     </Table>
+    <p className="border-t border-border p-u1 text-xs text-muted">Hours: {HOURS_LABEL}.</p>
+    </>
   );
 }

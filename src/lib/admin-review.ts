@@ -2,7 +2,7 @@
 // every caller MUST be a server action that has already called requireAdmin().
 // Kept separate from the actions so the rules can be tested on their own.
 import { sql } from "@/lib/db";
-import { computeHours } from "@/lib/extraction-rules";
+import { computeHours, HOURS_LABEL } from "@/lib/extraction-rules";
 
 export type ReviewResult = { ok: boolean; message: string };
 const fail = (message: string): ReviewResult => ({ ok: false, message });
@@ -96,7 +96,7 @@ export async function correct(
               review_note = ${n.note}
           where id = ${id}::uuid and sampled_at is not null and sample_result is null
           returning id`;
-  return rows.length === 0 ? fail("It was already reviewed.") : done(`Corrected to ${hours} hours.`);
+  return rows.length === 0 ? fail("It was already reviewed.") : done(`Corrected to ${hours} hours (${HOURS_LABEL}).`);
 }
 
 /** Confirm a sampled extraction was right. Its status stays auto_accepted. */

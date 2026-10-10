@@ -11,8 +11,7 @@ import {
 
 export { EXTRACT_PROMPT_VERSION } from "@/lib/extraction-rules";
 
-/** Anywhere hours saved is shown, it carries this label (PRD 5.4, amplifier framing). */
-export const HOURS_LABEL = "student-reported, AI-estimated";
+export { HOURS_LABEL } from "@/lib/extraction-rules";
 
 /**
  * Turn one submitted check-in into a structured hours-saved estimate (PRD 11.3).
