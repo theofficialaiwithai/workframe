@@ -14,7 +14,9 @@
     "course:live": "tsx --env-file=.env.local scripts/make-live.ts",
     "dev:backdate": "tsx --env-file=.env.local scripts/backdate-enrollment.ts",
     "test:extraction": "tsx scripts/test-extraction.ts",
-    "test:review": "tsx --conditions=react-server --env-file=.env.local scripts/test-review.ts"
+    "test:review": "tsx --conditions=react-server --env-file=.env.local scripts/test-review.ts",
+    "test:digest": "tsx --env-file=.env.local scripts/test-digest-guard.ts",
+    "test:sampling": "tsx --env-file=.env.local scripts/test-sampling.ts"
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.133.0",

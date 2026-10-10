@@ -37,7 +37,7 @@ export default async function AdminPage() {
       <div className="mt-u3 grid grid-cols-1 gap-u2 sm:grid-cols-2 lg:grid-cols-3">
         <Stat title="Extractions pending review" value={String(counts.pending)} href="/admin/extractions" />
         <Stat title="Sampled, awaiting review" value={String(counts.sampled)} href="/admin/sampling" />
-        <Stat title="Digests drafted" value={String(counts.digests)} />
+        <Stat title="Digests drafted" value={String(counts.digests)} href="/admin/digests" />
         <Stat title="Hours saved (counted rows only)" value={hours.toFixed(2)} note={HOURS_LABEL} />
         <Stat
           title="Automated jobs"

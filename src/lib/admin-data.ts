@@ -123,3 +123,25 @@ export function formatTime(d: Date | string | null): string {
     minute: "2-digit",
   });
 }
+
+export interface DigestRow {
+  id: string;
+  course_title: string;
+  week_start: string;
+  status: string;
+  body_md: string | null;
+  failure_reason: string | null;
+  stats: Record<string, unknown> | null;
+  drafted_at: Date;
+  vetoed_at: Date | null;
+  sent_at: Date | null;
+}
+
+export async function listDigests(): Promise<DigestRow[]> {
+  const rows = await sql`
+    select d.id, c.title as course_title, to_char(d.week_start, 'YYYY-MM-DD') as week_start,
+           d.status, d.body_md, d.failure_reason, d.stats, d.drafted_at, d.vetoed_at, d.sent_at
+    from digests d join courses c on c.id = d.course_id
+    order by d.drafted_at desc`;
+  return rows as unknown as DigestRow[];
+}

@@ -80,11 +80,18 @@ export async function runExtraction(checkinId: string): Promise<void> {
   }
 }
 
-/** Total hours saved across counted extractions only (PRD Section 9). */
-export async function countedHours(): Promise<number> {
+/**
+ * Total hours saved across counted extractions only (PRD Section 9). Pass a
+ * course id to total just that course; omit it for everything.
+ */
+export async function countedHours(courseId?: string): Promise<number> {
   const statuses = [...COUNTED_STATUSES];
   const rows = await sql`
-    select coalesce(sum(hours_saved), 0) as total
-    from extractions where status = any(${statuses}::text[])`;
+    select coalesce(sum(x.hours_saved), 0) as total
+    from extractions x
+    join checkins c on c.id = x.checkin_id
+    join enrollments e on e.id = c.enrollment_id
+    where x.status = any(${statuses}::text[])
+      and (${courseId ?? null}::uuid is null or e.course_id = ${courseId ?? null}::uuid)`;
   return Number(rows[0].total);
 }

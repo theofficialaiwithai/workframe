@@ -51,6 +51,14 @@ export async function confirmSample(id: string, _prev: ActionResult, fd: FormDat
   return finish(await review.confirm(id, text(fd, "note")));
 }
 
+/** Veto button on /admin/digests. The form passes (previous state, form data); neither is needed. */
+export async function vetoDigest(id: string, _prev: ActionResult, _fd: FormData): Promise<ActionResult> {
+  void _prev;
+  void _fd;
+  await requireAdmin();
+  return finish(await review.vetoDigest(id));
+}
+
 /** The kill switch. Stores who flipped it and when. */
 export async function setKillSwitch(paused: boolean): Promise<void> {
   const email = await requireAdmin();

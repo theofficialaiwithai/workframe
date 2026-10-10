@@ -111,3 +111,15 @@ export async function confirm(id: string, note: string): Promise<ReviewResult> {
     returning id`;
   return rows.length === 0 ? fail("It was already reviewed.") : done("Confirmed.");
 }
+
+/** Veto a drafted digest. Only a 'drafted' digest can be vetoed; the release cron never touches it. */
+export async function vetoDigest(id: string): Promise<ReviewResult> {
+  if (!UUID.test(id)) return fail("Invalid item.");
+  const rows = await sql`
+    update digests set status = 'vetoed', vetoed_at = now()
+    where id = ${id}::uuid and status = 'drafted'
+    returning id`;
+  return rows.length === 0
+    ? fail("Only a drafted digest can be vetoed. It may already have been sent or vetoed.")
+    : done("Vetoed. It will not be sent.");
+}
