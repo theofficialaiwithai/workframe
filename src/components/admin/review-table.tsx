@@ -59,16 +59,16 @@ function CorrectForm({ row, mode }: { row: ReviewRow; mode: "review" | "sample" 
 /** Review queue and sampling queue share one layout; only the actions differ. */
 export function ReviewTable({ rows, mode }: { rows: ReviewRow[]; mode: "review" | "sample" }) {
   return (
-    <Table className="min-w-[1180px]">
+    <Table className="min-w-[1180px] lg:min-w-0 lg:table-fixed">
       <TableHeader>
         <TableRow>
-          <TableHead>Course</TableHead>
-          <TableHead>Extracted</TableHead>
-          <TableHead>Hours</TableHead>
-          <TableHead>Confidence</TableHead>
-          <TableHead>{mode === "review" ? "Held because" : "Status"}</TableHead>
-          <TableHead className="min-w-[320px]">Evidence quoted, and the student&apos;s full answer</TableHead>
-          <TableHead className="min-w-[240px]">Actions</TableHead>
+          <TableHead className="lg:w-[110px]">Course</TableHead>
+          <TableHead className="lg:w-[150px]">Extracted</TableHead>
+          <TableHead className="lg:w-[70px]">Hours</TableHead>
+          <TableHead className="lg:w-[100px]">Confidence</TableHead>
+          <TableHead className="lg:w-[110px]">{mode === "review" ? "Held because" : "Status"}</TableHead>
+          <TableHead>Evidence quoted, and the student&apos;s full answer</TableHead>
+          <TableHead className="lg:w-[220px]">Actions</TableHead>
         </TableRow>
       </TableHeader>
       <TableBody>
