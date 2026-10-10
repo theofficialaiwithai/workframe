@@ -16,4 +16,9 @@ if (!url) {
  *
  * For a transaction use sql.transaction([sql`...`, sql`...`]).
  */
-export const sql = neon(url);
+export const sql = neon(url, {
+  // The driver talks to Neon over fetch(), and Next.js caches fetch() results
+  // by default. Database reads must always be fresh (a course going live, a new
+  // enrollment), so opt out of the cache for every query.
+  fetchOptions: { cache: "no-store" },
+});
