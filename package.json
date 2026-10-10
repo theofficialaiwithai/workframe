@@ -11,7 +11,8 @@
     "db:check": "tsx --env-file=.env.local scripts/db-check.ts",
     "test:guards": "tsx --env-file=.env.local scripts/test-guards.ts",
     "db:seed": "tsx --env-file=.env.local scripts/seed.ts",
-    "course:live": "tsx --env-file=.env.local scripts/make-live.ts"
+    "course:live": "tsx --env-file=.env.local scripts/make-live.ts",
+    "dev:backdate": "tsx --env-file=.env.local scripts/backdate-enrollment.ts"
   },
   "dependencies": {
     "@clerk/nextjs": "^6.39.7",
