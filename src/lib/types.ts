@@ -74,6 +74,11 @@ export interface Checkin {
   submitted_at: Date | null;
   raw_answer: string | null;
   blockers: string | null;
+  /** v2: "How confident are you that you could automate a similar task on your own?" 1-5. Null for check-ins submitted before v2. */
+  confidence: number | null;
+  /** v2, day 7 only, optional. Read by a person; never sent to Claude. */
+  transfer_answer: string | null;
+  transfer_attempted: boolean;
   created_at: Date;
 }
 
@@ -170,4 +175,52 @@ export interface ErrorLog {
 export interface SchemaMigration {
   name: string;
   ran_at: Date;
+}
+
+// ---- v2: learning design and the domain harness (migration 002) ----
+
+/** What a student saved in a lesson stage. Only 'predict' exists in v2. */
+export interface LessonResponse {
+  id: string;
+  student_id: string;
+  course_id: string;
+  lesson_slug: string;
+  stage: "predict";
+  response: string;
+  created_at: Date;
+}
+
+/** The day-5 recall prompt. The answer is read by a person; never sent to Claude. */
+export interface RecallPrompt {
+  id: string;
+  enrollment_id: string;
+  lesson_slug: string;
+  token: string;
+  sent_at: Date | null;
+  opened_at: Date | null;
+  response: string | null;
+  revealed_at: Date | null;
+  created_at: Date;
+}
+
+/** One released version of a profession's starter kit. */
+export interface HarnessKit {
+  id: string;
+  course_id: string;
+  version: string;
+  file_name: string;
+  changelog: string | null;
+  /** PRACTITIONER_TO_CONFIRM / PLACEHOLDER markers still in the kit. */
+  open_markers: number;
+  signed_off_by: string | null;
+  signed_off_at: Date | null;
+  released_at: Date | null;
+  created_at: Date;
+}
+
+export interface KitDownload {
+  id: string;
+  student_id: string;
+  kit_id: string;
+  downloaded_at: Date;
 }
