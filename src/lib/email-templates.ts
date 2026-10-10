@@ -1,3 +1,5 @@
+import { markdownToEmailHtml, markdownToPlainText } from "@/lib/markdown-lite";
+
 // Fixed email templates (PRD 5.2, 5.4, 5.6). Student-facing emails are fixed
 // text with values slotted in: no model-written text ever reaches a student.
 // Inline styles only; web fonts are not reliable in email clients.
@@ -110,38 +112,15 @@ export function digestAdminEmail(args: {
   const subject = "Workframe digest drafts ready: veto before Monday 8am";
   const html = layout(
     p("Digest drafts are ready. They send to insiders on Monday morning unless you veto them.") +
-      `<div style="margin:0 0 20px;font-size:15px;line-height:1.5;color:${INK};white-space:pre-line;">${esc(summaryLines.join("\n\n"))}</div>` +
+      summaryLines.map((l) => `<div style="margin:0 0 20px;padding-bottom:10px;border-bottom:1px solid ${BORDER};">${markdownToEmailHtml(l)}</div>`).join("") +
       button("Review and veto", adminUrl)
   );
   const text = `Digest drafts are ready. They send to insiders on Monday morning unless you veto them.
 
-${summaryLines.join("\n\n")}
+${summaryLines.map(markdownToPlainText).join("\n\n----------\n\n")}
 
 Review and veto: ${adminUrl}`;
   return { subject, html, text };
-}
-
-/** Escape first, then apply a small safe subset of markdown. */
-function markdownToHtml(md: string): string {
-  const inline = (s: string) =>
-    esc(s).replace(/\*\*(.+?)\*\*/g, "<strong>$1</strong>");
-  const blocks = md.trim().split(/\n{2,}/);
-  return blocks
-    .map((block) => {
-      const lines = block.split("\n");
-      if (lines.every((l) => /^\s*[-*]\s+/.test(l))) {
-        const items = lines
-          .map((l) => `<li style="margin:0 0 6px;">${inline(l.replace(/^\s*[-*]\s+/, ""))}</li>`)
-          .join("");
-        return `<ul style="margin:0 0 20px;padding-left:20px;font-size:16px;line-height:1.5;color:${INK};">${items}</ul>`;
-      }
-      const heading = /^#{1,6}\s+(.*)$/.exec(block);
-      if (heading) {
-        return `<p style="margin:0 0 10px;font-size:18px;font-weight:700;color:${INK};">${inline(heading[1])}</p>`;
-      }
-      return `<p style="margin:0 0 20px;font-size:16px;line-height:1.5;color:${INK};">${lines.map(inline).join("<br>")}</p>`;
-    })
-    .join("");
 }
 
 export function digestInsiderEmail(args: {
@@ -154,12 +133,12 @@ export function digestInsiderEmail(args: {
   const html = layout(
     p(greeting(insiderName)) +
       p("Here is a draft summary of this week's cohort. It is a summary of student-reported data, not a finding.") +
-      markdownToHtml(bodyMd)
+      markdownToEmailHtml(bodyMd)
   );
   const text = `${greeting(insiderName)}
 
 Here is a draft summary of this week's cohort. It is a summary of student-reported data, not a finding.
 
-${bodyMd}`;
+${markdownToPlainText(bodyMd)}`;
   return { subject, html, text };
 }

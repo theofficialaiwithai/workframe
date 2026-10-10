@@ -1,4 +1,5 @@
 import { ActionForm } from "@/components/admin/action-form";
+import { Markdown } from "@/components/markdown";
 import { Badge } from "@/components/ui/badge";
 import { vetoDigest } from "@/app/admin/actions";
 import { requireAdmin } from "@/lib/admin";
@@ -54,8 +55,8 @@ export default async function DigestsPage() {
             {d.body_md && (
               <div className="mt-u2">
                 <p className="text-sm font-bold uppercase tracking-wide text-muted">Draft summary</p>
-                <div className="mt-u1 whitespace-pre-wrap rounded-md bg-surface-alt p-u2 text-base leading-relaxed">
-                  {d.body_md}
+                <div className="mt-u1 rounded-md bg-surface-alt p-u2">
+                  <Markdown>{d.body_md}</Markdown>
                 </div>
               </div>
             )}

@@ -16,7 +16,9 @@
     "test:extraction": "tsx scripts/test-extraction.ts",
     "test:review": "tsx --conditions=react-server --env-file=.env.local scripts/test-review.ts",
     "test:digest": "tsx --env-file=.env.local scripts/test-digest-guard.ts",
-    "test:sampling": "tsx --env-file=.env.local scripts/test-sampling.ts"
+    "test:sampling": "tsx --env-file=.env.local scripts/test-sampling.ts",
+    "test:markdown": "tsx scripts/test-markdown.ts",
+    "test:checkin-cron": "tsx --env-file=.env.local scripts/test-checkin-cron.ts"
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.133.0",
@@ -35,6 +37,8 @@
     "next-mdx-remote": "^6.0.0",
     "react": "^18",
     "react-dom": "^18",
+    "react-markdown": "^10.1.0",
+    "remark-gfm": "^4.0.1",
     "resend": "^6.32.1",
     "server-only": "^0.0.1",
     "stripe": "^23.0.0",
